@@ -18,6 +18,8 @@ export function datosValidos(value: unknown): value is CineState {
   const salas = value.salas.salas;
   const funciones = value.salas.funciones;
   const reservas = value.reservas;
+  if (value.borradores !== undefined && (!objeto(value.borradores) || !Object.values(value.borradores).every(b => objeto(b) && Number.isInteger(b.cantidad) && typeof b.cantidad === 'number' && b.cantidad > 0 && Array.isArray(b.asientos) && b.asientos.every(texto) && texto(b.nombre) && texto(b.correo)))) return false;
+  if (!peliculas.every(p => objeto(p) && (p.imagen === undefined || (typeof p.imagen === 'string' && /^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp|heic|avif)$/i.test(p.imagen))))) return false;
   if (!peliculas.every(p => objeto(p) && ['codigo', 'nombre', 'genero', 'clasificacion', 'salaId', 'sinopsis', 'color'].every(k => texto(p[k])) && numero(p.precio) && numero(p.duracion) && typeof p.disponible === 'boolean')) return false;
   if (!salas.every(s => objeto(s) && texto(s.id) && texto(s.nombre) && Array.isArray(s.asientos) && s.asientos.every(texto) && new Set(s.asientos).size === s.asientos.length)) return false;
   if (!funciones.every(f => objeto(f) && texto(f.id) && texto(f.peliculaId) && texto(f.salaId) && fecha(f.inicio) && peliculas.some(p => p.codigo === f.peliculaId) && salas.some(s => s.id === f.salaId))) return false;

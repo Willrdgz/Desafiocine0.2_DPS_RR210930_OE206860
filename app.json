@@ -19,7 +19,15 @@
           "faceIDPermission": "Verifica tu identidad para entrar a la zona de personal."
         }
       ],
-      "expo-mail-composer"
+      "expo-mail-composer",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Selecciona un póster para la película.",
+          "microphonePermission": false
+        }
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "newArchEnabled": true,
     "splash": {

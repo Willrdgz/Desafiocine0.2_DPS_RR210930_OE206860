@@ -1,6 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { uriImagen } from '../services/imagenes';
 import { Pelicula } from '../types/pelicula';
 export default function Cartel({ pelicula }: { pelicula: Pelicula }) {
+  const [fallida, setFallida] = useState<string>();
+  if (pelicula.imagen && fallida !== pelicula.imagen) return <Image source={{ uri: uriImagen(pelicula.imagen) }} accessibilityLabel={'Póster de ' + pelicula.nombre} resizeMode="contain" style={styles.imagen} onError={() => setFallida(pelicula.imagen)} />;
   return <View style={[styles.poster, { backgroundColor: pelicula.color }]}>
     <Text style={styles.label}>CINE · SELECCIÓN</Text>
     <View style={styles.orbit}><View style={styles.planet} /></View>
@@ -9,6 +13,7 @@ export default function Cartel({ pelicula }: { pelicula: Pelicula }) {
   </View>;
 }
 const styles = StyleSheet.create({
+  imagen: { width: '100%', aspectRatio: 2 / 3, borderRadius: 18, backgroundColor: '#1C222C' },
   poster: { padding: 24, borderRadius: 18, minHeight: 240, gap: 16, overflow: 'hidden' },
   label: { color: '#FFFFFF', fontSize: 11, letterSpacing: 3, fontWeight: '700' },
   orbit: { alignSelf: 'center', width: 100, height: 100, borderRadius: 50, borderWidth: 1, borderColor: '#FFFFFF66', alignItems: 'center', justifyContent: 'center' },

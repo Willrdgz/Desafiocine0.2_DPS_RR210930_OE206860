@@ -38,5 +38,6 @@ export default function BoletoScreen({ route, navigation }: NativeStackScreenPro
     <Boton titulo={preparando ? 'Preparando correo…' : 'Enviar por correo'} disabled={preparando} onPress={enviarCorreo} />
     <Text style={ui.body}>Se abrirá tu aplicación de correo con el QR adjunto. Revisa el destinatario y pulsa Enviar allí.</Text>
     <Boton titulo="Ir a mis boletos" onPress={() => navigation.navigate('Inicio', { screen: 'Boletos' })} />
+    <Boton titulo="Comprar otra entrada" secundario onPress={() => navigation.navigate('Reserva', { peliculaId: reserva.peliculaId, funcionId: reserva.funcionId })} />
   </Pagina>;
 }

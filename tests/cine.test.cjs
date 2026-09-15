@@ -12,7 +12,25 @@ const { configureStore } = require('@reduxjs/toolkit');
 const { cineReducer } = require('../src/redux/reducer.ts');
 const { comprar, ocupados, guardar, borrarPelicula, crearFuncion, borrarFuncion, validarBoleto, estadisticas } = require('../src/redux/operaciones.ts');
 const { crearStorePersistente, datosValidos } = require('../src/redux/persistence.ts');
+const { actualizarBorrador } = require('../src/redux/slices/borradoresSlice.ts');
 const nuevo = () => configureStore({ reducer: cineReducer });
+
+test('borrador conserva asientos y cliente al volver, aumentar cantidad y reiniciar', async () => {
+  const adapter = memoria();
+  const a = crearStorePersistente(adapter); await listo(a);
+  const funcionId = entrada(a.store).funcionId;
+  a.store.dispatch(actualizarBorrador({ funcionId, cambios: { cantidad: 1, asientos: ['A1'], nombre: 'Ana', correo: 'ana@example.com' } }));
+  a.store.dispatch(actualizarBorrador({ funcionId, cambios: { cantidad: 2 } }));
+  assert.deepEqual(a.store.getState().borradores[funcionId].asientos, ['A1']);
+  assert.deepEqual(ocupados(a.store.getState(), funcionId), []);
+  await a.asegurarGuardado(); a.persistor.pause();
+  const b = crearStorePersistente(adapter); await listo(b);
+  assert.deepEqual(b.store.getState().borradores[funcionId], { cantidad: 2, asientos: ['A1'], nombre: 'Ana', correo: 'ana@example.com' });
+  b.store.dispatch(comprar(entrada(b.store, { asientos: ['A1', 'A2'], nombre: 'Ana' })));
+  assert.deepEqual(b.store.getState().borradores[funcionId], { cantidad: 1, asientos: [], nombre: 'Ana', correo: 'ana@example.com' });
+  assert.deepEqual(ocupados(b.store.getState(), funcionId), ['A1', 'A2']);
+  await b.asegurarGuardado(); b.persistor.pause();
+});
 const entrada = (store, cambios = {}) => ({ funcionId: store.getState().salas.funciones[0].id, asientos: ['A1'], nombre: 'Ana Pérez', correo: 'ana@example.com', ...cambios });
 const fechaFutura = dias => { const d = new Date(); d.setDate(d.getDate() + dias); d.setHours(15,0,0,0); return d.toISOString(); };
 function memoria(initial = null) {
@@ -106,11 +124,12 @@ test('persistencia recupera catálogo, funciones, reservas y QR utilizados tras 
   const a = crearStorePersistente(adapter); await listo(a);
   const id = a.store.dispatch(comprar(entrada(a.store)));
   a.store.dispatch(validarBoleto('CINE:1:' + id));
-  a.store.dispatch(guardar({ ...a.store.getState().peliculas[0], nombre: 'Persistida' }, true));
+  a.store.dispatch(guardar({ ...a.store.getState().peliculas[0], nombre: 'Persistida', imagen: 'poster-prueba.jpg' }, true));
   a.store.dispatch(crearFuncion({ peliculaId: 'P001', salaId: 'Sala 1', inicio: fechaFutura(15) }));
   await a.asegurarGuardado(); a.persistor.pause();
   const b = crearStorePersistente(adapter); await listo(b);
   assert.equal(b.store.getState().peliculas[0].nombre, 'Persistida');
+  assert.equal(b.store.getState().peliculas[0].imagen, 'poster-prueba.jpg');
   assert.equal(b.store.getState().salas.funciones.length, 10);
   assert.equal(b.store.getState().reservas[0].utilizada, true);
   assert.equal(b.store.getState().reservas[0].id, id);

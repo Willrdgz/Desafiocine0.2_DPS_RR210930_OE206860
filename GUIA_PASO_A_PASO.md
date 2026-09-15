@@ -74,6 +74,16 @@ Los datos del cine sí se persisten.
 9. Revisa el boleto y su QR.
 10. Ve a Mis boletos y vuelve a abrirlo.
 
+Durante la selección, puedes usar la flecha Atrás o **Volver y agregar más
+entradas**: los asientos, nombre y correo se conservan por función. Aumenta
+la cantidad y vuelve al mapa para completar la selección. Para reducirla,
+quita primero los asientos que ya no quieras.
+
+Al completar una compra aparece una confirmación con la película y los
+asientos. **Comprar otra entrada** conserva los datos del cliente, pero
+empieza con asientos nuevos: los de la compra anterior ya están ocupados.
+Al agregar o editar una película también aparece una alerta con su nombre.
+
 Es una venta simulada local: no hay pasarela ni cobro bancario.
 La selección aún sin confirmar no ocupa asientos.
 Una reserva puede contener varios asientos; su QR valida al grupo completo
@@ -95,7 +105,10 @@ eliminan el almacenamiento local.
 ## 6. Entrar a la zona de personal
 
 1. Registra una huella en los ajustes de seguridad del teléfono.
-2. En la parte inferior de Cartelera, pulsa Acceso del personal.
+2. Baja hasta el final de Cartelera. Debajo de la última película hay una barra
+   gris: desliza el dedo sobre ella o mantenla pulsada un segundo para mostrar
+   **Acceso del personal**. Pulsa ese botón. Se oculta al alejarte del final
+   o volver a entrar a Cartelera.
 3. Pulsa Entrar con biometría y autentícate.
 4. Deben aparecer estadísticas y accesos a películas, funciones y escáner.
 5. Cierra sesión o manda la aplicación a segundo plano y vuelve:
@@ -109,6 +122,19 @@ dispositivo: esta versión académica local no administra cuentas de empleados.
 
 Desde Gestionar películas:
 
+Puedes añadir pósteres tanto a películas nuevas como a las existentes:
+
+- Entra a Agregar película o Editar y pulsa Seleccionar imagen de la galería.
+- Selecciona y recorta una imagen. Al volver, confirma la huella para continuar
+  con el mismo formulario.
+- Revisa la vista previa y pulsa Guardar película.
+- Cambiar imagen permite reemplazarla; Quitar imagen restaura el cartel de texto
+  cuando guardes. Cancelar el selector conserva la imagen anterior.
+- El póster aparece en la cartelera y en el detalle. Se copia al almacenamiento
+  privado del dispositivo; Redux guarda su nombre y AsyncStorage lo conserva.
+- Comprueba que siga visible al cerrar y abrir Expo Go. Las películas existentes
+  sin imagen siguen funcionando y no se borra ninguna compra.
+
 1. Agrega una película con código único, nombre, género, duración, clasificación,
    sala y precio.
 2. Edítala y cambia su disponibilidad.
@@ -121,9 +147,12 @@ Desde Gestionar películas:
 Desde Programar funciones:
 
 1. Selecciona película y sala.
-2. Ingresa una fecha futura con formato AAAA-MM-DD.
-3. Ingresa hora local en formato de 24 horas, HH:MM.
-4. Guarda y comprueba que aparezca en el recorrido de compra.
+2. Pulsa Seleccionar fecha en el calendario y elige el día.
+3. Pulsa Seleccionar hora y elige la hora y AM o PM en el reloj.
+4. Guarda: aparece una confirmación con película, sala, día y hora. El formulario
+   limpia película, sala, fecha y hora solo después de guardar correctamente.
+   Comprueba que aparezca en el recorrido de compra. Si hay un conflicto de
+   horario, conserva los datos para corregirlos.
 5. Intenta duplicar el horario o cruzarlo con otra película en la misma sala.
 6. Prueba eliminar una función: solo se permite sin ventas.
 
